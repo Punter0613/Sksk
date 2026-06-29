@@ -1,7 +1,7 @@
 import sys
 import requests
 
-CLOUD_URL = https://zfqzw-34-10-44-160.run.pinggy-free.link
+CLOUD_URL =https://zfqzw-34-10-44-160.run.pinggy-free.link
 
 
 def get_cloud_response(prompt):

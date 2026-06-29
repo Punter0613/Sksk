@@ -1,0 +1,17 @@
+
+gh sksk build <module>
+gh sksk scaffold <component>
+gh sksk diagnose <issue>
+gh sksk build backend
+gh sksk build backend
+gh sksk build backend
+user_input = " ".join(sys.argv[1:])
+gh sksk build backend
+code sksk.sh
+code ai.py
+notepad.exe manifest.yml
+notepad.exe sksk.sh
+notepad.exe ai.py
+notepad.exe manifest.yml
+notepad.exe sksk.sh
+notepad.exe ai.py

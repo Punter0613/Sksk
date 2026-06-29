@@ -1,18 +1,13 @@
-import sys
+echo 'import sys
 import requests
 
 CLOUD_URL = "https://zfqzw-34-10-44-160.run.pinggy-free.link"
-
 
 def get_cloud_response(prompt):
     try:
         response = requests.post(
             f"{CLOUD_URL}/api/generate",
-            json={
-                "model": "llama3.2",
-                "prompt": prompt,
-                "stream": False
-            },
+            json={"model": "llama3.2", "prompt": prompt, "stream": False},
             timeout=60
         )
         if response.status_code == 200:
@@ -24,4 +19,4 @@ def get_cloud_response(prompt):
 
 if __name__ == "__main__":
     user_input = " ".join(sys.argv[1:])
-    print(get_cloud_response(user_input))
+    print(get_cloud_response(user_input))' > ai.py

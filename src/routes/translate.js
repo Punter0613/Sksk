@@ -1,30 +1,45 @@
 const router = require('express').Router();
-const { groqChat, parseGroqJson } = require('../services/groq');
+const aiClient = require('../services/ai/aiClient');
 
 router.post('/', async (req, res, next) => {
   try {
     const { text } = req.body || {};
     if (!text) return res.status(400).json({ error: 'No text provided' });
 
-    const prompt = `You are an expert automotive technician. A customer described their car problem in plain everyday language. Translate it into precise technical mechanic language that a shop tech would write on a repair order.
+    const prompt = `
+You are an expert automotive technician.
+Translate the customer's plain language car issue into precise mechanic terminology.
 
-Customer said: "${text}"
-
-Respond with JSON ONLY:
+Return JSON ONLY:
 {
-  "translated": "technical mechanic description of the same symptom",
-  "keywords": ["technical term 1", "technical term 2"]
-}`;
+  "translated": "technical mechanic description",
+  "keywords": ["term1", "term2"]
+}
 
-    if (!process.env.GROQ_API_KEY) {
-      return res.json({ translated: text, keywords: [] });
+Customer: "${text}"
+`;
+
+    const result = await aiClient.run({
+      task: "translate",
+      messages: [
+        { role: "user", content: prompt }
+      ]
+    });
+
+    const raw = result?.content || result?.output || result?.text || "";
+
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      parsed = null;
     }
 
-    const groqRes = await groqChat([{ role: 'user', content: prompt }], { max_tokens: 300 });
-    const raw = groqRes?.choices?.[0]?.message?.content || '';
-    const parsed = parseGroqJson(raw);
+    res.json({
+      translated: parsed?.translated || text,
+      keywords: parsed?.keywords || []
+    });
 
-    res.json({ translated: parsed?.translated || text, keywords: parsed?.keywords || [] });
   } catch (err) {
     next(err);
   }

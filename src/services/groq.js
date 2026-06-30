@@ -1,13 +1,13 @@
-const { aiClient } = require('./ai/aiClient');
-
 /**
- * TEMP COMPAT LAYER
- * Routes legacy groqChat calls into AI orchestrator
+ * LEGACY COMPAT LAYER (SAFE)
+ * Must NOT participate in routing graph
  */
+
+const { route } = require('./ai/providerRouter');
+
 async function groqChat(messages, opts = {}) {
-  return aiClient.run({
-    provider: 'auto',
-    task: 'legacy',
+  return route({
+    task: opts.task || 'estimate',
     messages,
     options: opts
   });
@@ -16,7 +16,7 @@ async function groqChat(messages, opts = {}) {
 function parseGroqJson(text) {
   try {
     return JSON.parse(text);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
